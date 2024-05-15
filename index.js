@@ -95,8 +95,6 @@ if(urls.length > 0) {
   document.getElementById('placeholder').style.display = 'none';
   document.getElementById('new').style.display = '';
 
-  let createButton = document.getElementById('create-button');
-
   let inputs = [];
   function onChange(e) {
     // If an input changes to be empty
@@ -150,7 +148,7 @@ if(urls.length > 0) {
         let randId = Math.floor(Math.random() * 100000000);
         let newP = document.createElement('p');
         newP.innerHTML = `<label for="url${randId}">URL:</label> <input type="text" id="url${randId}" class="url-input"></p>`;
-        document.getElementById('create').insertBefore(newP, createButton);
+        document.getElementById('create').appendChild(newP);
         let newInput = newP.querySelector('input.url-input');
         inputs.push(newInput);
         newInput.addEventListener('change', onChange);
@@ -162,5 +160,8 @@ if(urls.length > 0) {
     inputs.push(input);
     input.addEventListener('change', onChange);
     input.addEventListener('input', onInput);
+  });
+  document.getElementById('create').addEventListener('submit', (e) => {
+    e.preventDefault();
   });
 }
