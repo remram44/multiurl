@@ -95,5 +95,72 @@ if(urls.length > 0) {
   document.getElementById('placeholder').style.display = 'none';
   document.getElementById('new').style.display = '';
 
-  // TODO: creation form
+  let createButton = document.getElementById('create-button');
+
+  let inputs = [];
+  function onChange(e) {
+    // If an input changes to be empty
+    if(e.target.value !== '') {
+      return;
+    }
+
+    // Find the last of the empty inputs
+    let lastEmptyInput = null;
+    for(let idx = 0; idx < inputs.length; ++idx) {
+      if(inputs[idx].value === '') {
+        lastEmptyInput = idx;
+      }
+    }
+
+    // Remove all empty inputs except the last one
+    inputs = inputs.filter((input, idx) => {
+      if(idx != lastEmptyInput && input.value === '') {
+        input.removeEventListener('change', onChange);
+        input.removeEventListener('input', onInput);
+        input.parentNode.parentNode.removeChild(input.parentNode);
+        return false;
+      }
+      return true;
+    });
+  }
+  function onInput(e) {
+    // Update the result
+    let createUrls = [];
+    for(let input of inputs) {
+      if(input.value !== '') {
+        createUrls.push(input.value);
+      }
+    }
+    let resultUrl = 'https://m.remram.fr/?' + createUrls.join(',');
+    let result = document.getElementById('create-result');
+    result.innerText = resultUrl;
+    result.setAttribute('href', resultUrl);
+
+    // If an input becomes not empty
+    if(e.target.value !== '') {
+      // Check whether there is an empty input
+      let hasEmptyInput = false;
+      for(let idx = 0; idx < inputs.length; ++idx) {
+        if(inputs[idx].value === '') {
+          hasEmptyInput = true;
+        }
+      }
+      // If none, add one
+      if(!hasEmptyInput) {
+        let randId = Math.floor(Math.random() * 100000000);
+        let newP = document.createElement('p');
+        newP.innerHTML = `<label for="url${randId}">URL:</label> <input type="text" id="url${randId}" class="url-input"></p>`;
+        document.getElementById('create').insertBefore(newP, createButton);
+        let newInput = newP.querySelector('input.url-input');
+        inputs.push(newInput);
+        newInput.addEventListener('change', onChange);
+        newInput.addEventListener('input', onInput);
+      }
+    }
+  }
+  document.getElementById('create').querySelectorAll('input.url-input').forEach(input => {
+    inputs.push(input);
+    input.addEventListener('change', onChange);
+    input.addEventListener('input', onInput);
+  });
 }
