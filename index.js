@@ -131,7 +131,7 @@ if(urls.length > 0) {
         createUrls.push(input.value);
       }
     }
-    let resultUrl = 'https://m.remram.fr/?' + createUrls.join(',');
+    let resultUrl = 'https://remram44.github.io/multiurl/?' + createUrls.join(',');
     let result = document.getElementById('create-result');
     result.innerText = resultUrl;
     result.setAttribute('href', resultUrl);
